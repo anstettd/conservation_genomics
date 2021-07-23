@@ -22,37 +22,36 @@ library(rgeos)
 library(geodist)
 library(RColorBrewer)
 library(VennDiagram)
-#install.packages("viridis")  # Install
 library(viridis)
 
 ###################################################################################
-#Import population data
-pop_var_raw <- read_csv("Genomics_scripts/Data/paper_ID_site_select.csv")
+#Import population data to calculate distance between sites
+pop_var_raw <- read_csv("Data/paper_ID_site_select.csv")
 deg_distance <- pop_var_raw %>% dplyr::select(Long,Lat)
-geography <- geodist(deg_distance)
+geography <- geodist(deg_distance) 
 geography_km <- as.data.frame(geography/1000)
 
 #Import abundance results
-freq_1 <- read_csv("Genomics_scripts/Data/freq_1.csv")
-freq_2 <- read_csv("Genomics_scripts/Data/freq_2.csv")
-freq_3 <- read_csv("Genomics_scripts/Data/freq_3.csv")
-freq_4 <- read_csv("Genomics_scripts/Data/freq_4.csv")
-freq_5 <- read_csv("Genomics_scripts/Data/freq_5.csv")
-freq_6 <- read_csv("Genomics_scripts/Data/freq_6.csv")
-freq_7 <- read_csv("Genomics_scripts/Data/freq_7.csv")
-freq_8 <- read_csv("Genomics_scripts/Data/freq_8.csv")
-freq_9 <- read_csv("Genomics_scripts/Data/freq_9.csv")
+freq_1 <- read_csv("Data/freq_1.csv")
+freq_2 <- read_csv("Data/freq_2.csv")
+freq_3 <- read_csv("Data/freq_3.csv")
+freq_4 <- read_csv("Data/freq_4.csv")
+freq_5 <- read_csv("Data/freq_5.csv")
+freq_6 <- read_csv("Data/freq_6.csv")
+freq_7 <- read_csv("Data/freq_7.csv")
+freq_8 <- read_csv("Data/freq_8.csv")
+freq_9 <- read_csv("Data/freq_9.csv")
 
 #Import presence/abscence results
-binary_1 <- read_csv("Genomics_scripts/Data/freq_binary_1.csv")
-binary_2 <- read_csv("Genomics_scripts/Data/freq_binary_2.csv")
-binary_3 <- read_csv("Genomics_scripts/Data/freq_binary_3.csv")
-binary_4 <- read_csv("Genomics_scripts/Data/freq_binary_4.csv")
-binary_5 <- read_csv("Genomics_scripts/Data/freq_binary_5.csv")
-binary_6 <- read_csv("Genomics_scripts/Data/freq_binary_6.csv")
-binary_7 <- read_csv("Genomics_scripts/Data/freq_binary_7.csv")
-binary_8 <- read_csv("Genomics_scripts/Data/freq_binary_8.csv")
-binary_9 <- read_csv("Genomics_scripts/Data/freq_binary_9.csv")
+binary_1 <- read_csv("Data/freq_binary_1.csv")
+binary_2 <- read_csv("Data/freq_binary_2.csv")
+binary_3 <- read_csv("Data/freq_binary_3.csv")
+binary_4 <- read_csv("Data/freq_binary_4.csv")
+binary_5 <- read_csv("Data/freq_binary_5.csv")
+binary_6 <- read_csv("Data/freq_binary_6.csv")
+binary_7 <- read_csv("Data/freq_binary_7.csv")
+binary_8 <- read_csv("Data/freq_binary_8.csv")
+binary_9 <- read_csv("Data/freq_binary_9.csv")
 
 # Get Proportion of SNPs Present
 psp_1 <- as.data.frame(colMeans(binary_1[5:59],na.rm = TRUE))
@@ -65,7 +64,7 @@ psp_7 <- as.data.frame(colMeans(binary_7[5:59],na.rm = TRUE))
 psp_8 <- as.data.frame(colMeans(binary_8[5:59],na.rm = TRUE))
 psp_9 <- as.data.frame(colMeans(binary_9[5:59],na.rm = TRUE))
 
-#put Proportion of SNPs Present into population dataframe
+#Put proportion of SNPs Present into population dataframe
 pop_var <- cbind(pop_var_raw,psp_1,psp_2,psp_3,psp_4,psp_5,psp_6,psp_7,psp_8,psp_9)
 colnames(pop_var)[6:14] <- c("MAT","MAP","PAS","EXT","CMD","Tave_wt","Tave_sm","PPT_wt","PPT_sm") 
 ###################################################################################
@@ -82,7 +81,12 @@ EPSG4326<-"+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" #set
 
 ###################################################################################
 ###################################################################################
-#Venn Diagram of SNP overlap
+#Venn Diagram of SNP overlap between three climate variables
+
+##### Annual #####
+# MAT = Mean annual temperature (°C)
+# MAP = Mean annual precipitation (mm)
+# CMD = Hargreaves climatic moisture deficit (mm)
 
 MAT_set <- pull(binary_1[,1])
 MAP_set <- pull(binary_2[,1])
@@ -107,8 +111,7 @@ dev.off()
 
 
 ###################################################################################
-#Map distribution of single snps as proportion
-
+#Map distribution of the proportion of individual SNPs
 
 # Map of P1, present in most localities
 b1_snp2 <- freq_1 %>% filter(SNP==224717) #select abundance data for snp 2
@@ -154,11 +157,10 @@ snp25 <- tm_shape(calo)+
   tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.005)
 tmap_save(snp25, filename = "Graphs/snp25_freq.pdf",width=5, height=6)
 
-
 ###################################################################################
 
 ###################################################################################
-#Map distribution of single snps Presence / absence
+#Map the presence or absence of individual SNPs 
 
 
 # Map of P1, present in most localities

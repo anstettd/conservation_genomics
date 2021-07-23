@@ -1,8 +1,10 @@
 ##################################################################################
-## Tabulate proportion of alleles associated with each environmental variable
-## Generate frequency tables and binary tables 
-## Author Daniel Anstett & Julia Anstett
 ## Set up tables needed to carry out donor site selection
+## Tabulate proportion of alleles associated with each environmental variable
+## Generate frequency tables and binary tables containing population level proportion 
+## and binary snp info for allele associated with adptation to climate change
+
+## Author Daniel Anstett & Julia Anstett
 ##
 ## Last Modified July 23, 2021
 ###################################################################################
@@ -13,24 +15,24 @@
 library(tidyverse)
 
 #Import snp env associations
-env1_loci <- read_csv("Genomics_scripts/Data/env1_loci.csv")
-env2_loci <- read_csv("Genomics_scripts/Data/env2_loci.csv")
-env3_loci <- read_csv("Genomics_scripts/Data/env3_loci.csv")
-env4_loci <- read_csv("Genomics_scripts/Data/env4_loci.csv")
-env5_loci <- read_csv("Genomics_scripts/Data/env5_loci.csv")
-env6_loci <- read_csv("Genomics_scripts/Data/env6_loci.csv")
-env7_loci <- read_csv("Genomics_scripts/Data/env7_loci.csv")
-env8_loci <- read_csv("Genomics_scripts/Data/env8_loci.csv")
-env9_loci <- read_csv("Genomics_scripts/Data/env9_loci.csv")
+env1_loci <- read_csv("Data/env1_loci.csv")
+env2_loci <- read_csv("Data/env2_loci.csv")
+env3_loci <- read_csv("Data/env3_loci.csv")
+env4_loci <- read_csv("Data/env4_loci.csv")
+env5_loci <- read_csv("Data/env5_loci.csv")
+env6_loci <- read_csv("Data/env6_loci.csv")
+env7_loci <- read_csv("Data/env7_loci.csv")
+env8_loci <- read_csv("Data/env8_loci.csv")
+env9_loci <- read_csv("Data/env9_loci.csv")
 
-#Import Climate
-climate <- read_csv("Donor_selection/Data/climate_pop.csv")
+#Import 1981 to 2010 climate data per each population
+climate <- read_csv("Data/climate_pop.csv")
 
 ###################################################################################
 ###################################################################################
 ##setup functions
 
-#Generate frequency matrix for prop A 
+#Generate frequency matrix for proportion of allele A 
 prop_A <- function(snp_table) {
 snp_prop_A<- snp_table %>% select (chr_snp, Chromosome, SNP, Env)
 counter=5
@@ -54,7 +56,7 @@ for (i in seq(1,110,2)) {
 return(snp_prop_A)
 }
 
-#Generate frequency matrix for prop B
+#Generate frequency matrix for proportion of allele B
 prop_B <- function(snp_table){
 #B Mat
 snp_prop_B<-snp_table %>% select (chr_snp, Chromosome, SNP, Env)
@@ -82,8 +84,8 @@ return(snp_prop_B)
 
 
 ###################################################################################
-##set up frequency association table
-#Positive assocation with climate
+## Function used to set up frequency association table
+#Positive association with climate
 FAT_p <- function(snp_table,climate_table,env_in){
   snp_prop_A_in<-prop_A(snp_table) # call function
   snp_prop_B_in<-prop_B(snp_table) # call function
@@ -194,7 +196,7 @@ FAT_n <- function(snp_table,climate_table,env_in){
 # PPT_wt = Winter precipitation (mm)
 # PPT_sm = Summer precipitation (mm)
 
-#Get Frequency Association Table (FAT) for each environmental variable
+#Get Frequency Association Table for each environmental variable
 freq_1 <- FAT_p(env1_loci,climate,"MAT")
 freq_2 <- FAT_n(env2_loci,climate,"MAP")
 freq_3 <- FAT_n(env3_loci,climate,"PAS")
@@ -255,26 +257,26 @@ freq9_p_a <- cbind(freq_lable,part9)
 
 #Export
 
-write_csv(freq_1, "Genomics_scripts/Data/freq_1.csv")
-write_csv(freq_2, "Genomics_scripts/Data/freq_2.csv")
-write_csv(freq_3, "Genomics_scripts/Data/freq_3.csv")
-write_csv(freq_4, "Genomics_scripts/Data/freq_4.csv")
-write_csv(freq_5, "Genomics_scripts/Data/freq_5.csv")
-write_csv(freq_6, "Genomics_scripts/Data/freq_6.csv")
-write_csv(freq_7, "Genomics_scripts/Data/freq_7.csv")
-write_csv(freq_8, "Genomics_scripts/Data/freq_8.csv")
-write_csv(freq_9, "Genomics_scripts/Data/freq_9.csv")
+write_csv(freq_1, "Data/freq_1.csv")
+write_csv(freq_2, "Data/freq_2.csv")
+write_csv(freq_3, "Data/freq_3.csv")
+write_csv(freq_4, "Data/freq_4.csv")
+write_csv(freq_5, "Data/freq_5.csv")
+write_csv(freq_6, "Data/freq_6.csv")
+write_csv(freq_7, "Data/freq_7.csv")
+write_csv(freq_8, "Data/freq_8.csv")
+write_csv(freq_9, "Data/freq_9.csv")
 
 
-write_csv(freq1_p_a, "Genomics_scripts/Data/freq_binary_1.csv")
-write_csv(freq2_p_a, "Genomics_scripts/Data/freq_binary_2.csv")
-write_csv(freq3_p_a, "Genomics_scripts/Data/freq_binary_3.csv")
-write_csv(freq4_p_a, "Genomics_scripts/Data/freq_binary_4.csv")
-write_csv(freq5_p_a, "Genomics_scripts/Data/freq_binary_5.csv")
-write_csv(freq6_p_a, "Genomics_scripts/Data/freq_binary_6.csv")
-write_csv(freq7_p_a, "Genomics_scripts/Data/freq_binary_7.csv")
-write_csv(freq8_p_a, "Genomics_scripts/Data/freq_binary_8.csv")
-write_csv(freq9_p_a, "Genomics_scripts/Data/freq_binary_9.csv")
+write_csv(freq1_p_a, "Data/freq_binary_1.csv")
+write_csv(freq2_p_a, "Data/freq_binary_2.csv")
+write_csv(freq3_p_a, "Data/freq_binary_3.csv")
+write_csv(freq4_p_a, "Data/freq_binary_4.csv")
+write_csv(freq5_p_a, "Data/freq_binary_5.csv")
+write_csv(freq6_p_a, "Data/freq_binary_6.csv")
+write_csv(freq7_p_a, "Data/freq_binary_7.csv")
+write_csv(freq8_p_a, "Data/freq_binary_8.csv")
+write_csv(freq9_p_a, "Data/freq_binary_9.csv")
   
 
 
