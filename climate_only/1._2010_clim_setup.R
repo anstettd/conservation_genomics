@@ -2,7 +2,7 @@
 ### SCRIPT PURPOSE: Transform climate rasters to bioclim 
 # Modified from Angert et al. 2018, American Naturalist
 # Author: Amy Angert & Daniel Anstett
-# last update:  June 23 2021
+# last update:  July 23 2021
 
 ## OVERALL WORKFLOW:
 # !!! For raster data, this assumes you have downloaded tiff rasters for 36 annual variables 
@@ -24,10 +24,10 @@ library(rgdal) # for transforming projections
 
 ## INPUTS
 ## points defining range of M. cardinalis for the sake of cropping climate layers
-# clim <- read_csv("SDM/data_files/points_Normal_1961_1990MSY.csv")
+ clim <- read_csv("Data/points_Normal_1961_1990MSY.csv")
 
 # Ensure no missing values
-#complete <- clim[complete.cases(clim), ] # should be same dim as clim if there are no missing values
+complete <- clim[complete.cases(clim), ] # should be same dim as clim if there are no missing values
 
 ##############################################################################
 #Functions
@@ -75,62 +75,23 @@ plot(allfiles[[2]]) #compare to unclipped layer
 # !!! Be sure working directory is set back to project folder
 setwd("~/Dropbox/a Papers/final_githubs/conservation_genomics")
 
-writeRaster(allfiles.clip[[1]],"Donor_selection/data/1981_2010/CMD.grd",bylayer = TRUE,
+writeRaster(allfiles.clip[[1]],"Data/1981_2010/CMD.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
-writeRaster(allfiles.clip[[2]],"Donor_selection/data/1981_2010/EXT.grd",bylayer = TRUE,
+writeRaster(allfiles.clip[[2]],"Data/1981_2010/EXT.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
-writeRaster(allfiles.clip[[3]],"Donor_selection/data/1981_2010/MAP.grd",bylayer = TRUE,
+writeRaster(allfiles.clip[[3]],"Data/1981_2010/MAP.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
-writeRaster(allfiles.clip[[4]],"Donor_selection/data/1981_2010/MAT.grd",bylayer = TRUE,
+writeRaster(allfiles.clip[[4]],"Data/1981_2010/MAT.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
-writeRaster(allfiles.clip[[5]],"Donor_selection/data/1981_2010/PAS.grd",bylayer = TRUE,
+writeRaster(allfiles.clip[[5]],"Data/1981_2010/PAS.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
 
-writeRaster(allfiles.clip[[6]],"Donor_selection/data/1981_2010/PPT_sm.grd",bylayer = TRUE,
+writeRaster(allfiles.clip[[6]],"Data/1981_2010/PPT_sm.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
-writeRaster(allfiles.clip[[7]],"Donor_selection/data/1981_2010/PPT_wt.grd",bylayer = TRUE,
+writeRaster(allfiles.clip[[7]],"Data/1981_2010/PPT_wt.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
-writeRaster(allfiles.clip[[8]],"Donor_selection/data/1981_2010/Tave_sm.grd",bylayer = TRUE,
+writeRaster(allfiles.clip[[8]],"Data/1981_2010/Tave_sm.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
-writeRaster(allfiles.clip[[9]],"Donor_selection/data/1981_2010/Tave_wt.grd",bylayer = TRUE,
+writeRaster(allfiles.clip[[9]],"Data/1981_2010/Tave_wt.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
 ##############################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Messy work
-
-## get CRS
-##test_crs<-raster("~/Dropbox/AM_Workshop/Climate/Normal_1981_2010_bioclim/Selected/Normal_1981_2010_CMD.tif")
-##crs(test_crs) # In laea projection, Lambert azimuthal equal-area projection
-
-
-#re-project rasters into WGS 1984 (EPSG 4326)
-##EPSG4326<-"+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" #setup WGS 1984 CRS
-##cmd_raster <- projectRaster(allfiles[[1]], crs=EPSG4326) #reproject to WGS 1984 (EPSG 4326)
-
-
-#what the crs() shows new
-##CRS arguments:
-#  +proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs 
-
-#what the crs shows old
-#CRS arguments:
-#  +proj=lcc +lat_0=0 +lon_0=-95 +lat_1=49 +lat_2=77 +x_0=0 +y_0=0 +datum=WGS84 +units=m
-#+no_defs
-
-#Inutputed crs
-#prj.lcc <- "+proj=lcc +lon_0=-95 +lat_1=49 +lat_2=77 +type=crs" 
-
-
