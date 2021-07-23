@@ -1,9 +1,10 @@
 ##################################################################################
-## Tabulate proportion of allele associated with environmental varaible 
+## Tabulate proportion of alleles associated with each environmental variable
+## Generate frequency tables and binary tables 
 ## Author Daniel Anstett & Julia Anstett
-## 
+## Set up tables needed to carry out donor site selection
 ##
-## Last Modified July 7, 2021
+## Last Modified July 23, 2021
 ###################################################################################
 
 

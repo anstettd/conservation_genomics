@@ -1,9 +1,10 @@
 ##################################################################################
-## Make % prescence maps of each climate assocaited snp
+## Select possible donor sites using genomics
+## Make maps displaying genomic variation across landsacpe
 ## Author Daniel Anstett 
-## 
 ##
-## Last Modified July 8, 2021
+##
+## Last Modified July 23, 2021
 ###################################################################################
 
 

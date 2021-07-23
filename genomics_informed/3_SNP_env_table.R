@@ -1,5 +1,5 @@
 ##################################################################################
-## Set up snp table
+## Join SNP table with environmental data
 ## Author Daniel Anstett & Julia Anstett
 ## 
 ##

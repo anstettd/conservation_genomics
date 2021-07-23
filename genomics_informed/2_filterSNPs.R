@@ -1,9 +1,9 @@
 ##################################################################################
-## Filter out strong evidence for snps associated with climate
+## Filter out snps with strong evidence of association with climate
 ## Author Daniel Anstett & Julia Anstett
-## 
+## Filter for BayesFactor > 10
 ##
-## Last Modified July 6, 2021
+## Last Modified July 23, 2021
 ###################################################################################
 
 
