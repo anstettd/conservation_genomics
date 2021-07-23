@@ -1,9 +1,9 @@
 ##################################################################################
-## Filter out strong evidence for snps associated with climate
+## Make Manhattan plots for SNPS associated with each environmental variable
 ## Author Daniel Anstett & Julia Anstett
 ## 
 ##
-## Last Modified July 6, 2021
+## Last Modified July 23, 2021
 ###################################################################################
 
 
@@ -13,12 +13,14 @@ library(tidyverse)
 library(qqman)
 
 #Import chromosome size
-chr_size <- read_csv("Genomics_scripts/Data/chr_size.csv")
+chr_size <- read_csv("Data/chr_size.csv")
 chr_size[,3] <- cumsum(chr_size$size) #get cumulative chromosome position
 colnames(chr_size)[3] <- "poz"
 
 
 #Import snp env associations
+#Use files provided through external link: https://www.dropbox.com/sh/l6zm0av77fxsndg/AABYluDaUZE_OY1U32FqSgwUa?dl=0
+#Set up in a directory and change "/Users/daniel_anstett/Dropbox/AM_Workshop/trim/" to match that directory
 env1 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_1_trim.tsv",header=F, sep=" ")
 env2 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_2_trim.tsv",header=F, sep=" ")
 env3 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_3_trim.tsv",header=F, sep=" ")
@@ -40,11 +42,11 @@ colnames(env7) <- c("Chromosome","SNP","Env","BF")
 colnames(env8) <- c("Chromosome","SNP","Env","BF")
 colnames(env9) <- c("Chromosome","SNP","Env","BF")
 
-#Make Chromosome SNP variable for easier left_joining later
-#Make a cumulative basepair value
-env1_united <- env1 %>% unite(chr_snp,Chromosome,SNP)
-env1_united <- env1_united %>% select(chr_snp)
-env1_united <- cbind(env1_united,env1)
+# Set up data frame used to make the mahattan plot for each environmental variable
+env1_united <- env1 %>% unite(chr_snp,Chromosome,SNP) #merge chomosome and snp ID into one combined ID
+env1_united <- env1_united %>% select(chr_snp) #select only the combined ID
+env1_united <- cbind(env1_united,env1) #bind combined ID back to the main dataframe for env1
+#calculates the cumulatve basepair position based on chromsome sizes and SNP IDs
 env1_united <- env1_united%>% mutate(CHR=as.numeric(gsub("CE10_chr","",Chromosome))) %>%
   mutate(BP = ifelse(CHR == 1, SNP,
                      ifelse(CHR==2, SNP+chr_size$poz[1],
@@ -160,7 +162,11 @@ env9_united <- env9_united %>% mutate(CHR=as.numeric(gsub("CE10_chr","",Chromoso
                                                                SNP+chr_size$poz[7]))))))))
 ###
 #Make Manhattan Plots
-
+#Done for example variables:
+# env1 = Mean annual temperature (MAT)
+# env2 = Mean annual precipitation (MAP)
+# env5 = Hargreaves cumulative moisture deficit (CMD)
+# !!! Warning will make a few minutes of computational time. The resulting image is rather large.
 #ENV 1 - MAT 
 axisdf_1 <- env1_united %>% group_by(CHR) %>% summarize(center=( max(BP) + min(BP) ) / 2 )
 
@@ -191,9 +197,6 @@ ggplot(env1_united, aes(x=BP, y=BF)) +
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5)
   )
-
-#Export. File is very large and somewhat hard to hande/open. 
-#ggsave("/Users/daniel_anstett/Dropbox/AM_Workshop/large_graphs/manhattan_1.pdf",width=9, height=6)
 
 
 
@@ -227,9 +230,6 @@ ggplot(env2_united, aes(x=BP, y=BF)) +
     axis.title.x = element_text(color="black", size=20, vjust = 0.5, face="bold"),
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5)
   )
-
-#Export. File is very large and somewhat hard to hande/open. 
-#ggsave("/Users/daniel_anstett/Dropbox/AM_Workshop/large_graphs/manhattan_2.pdf",width=9, height=6)
 
 
 
@@ -265,14 +265,11 @@ ggplot(env5_united, aes(x=BP, y=BF)) +
     axis.title.y = element_text(color="black", size=20,vjust = 2, face="bold",hjust=0.5)
   )
 
-#Export. File is very large and somewhat hard to hande/open. 
-#ggsave("/Users/daniel_anstett/Dropbox/AM_Workshop/large_graphs/manhattan_5.pdf",width=9, height=6)
-
 
 
 
 ################
-#Test plot with only two chromosomes
+#Test plot with only two chromosomes, for changing visualization
 env1_united_chr1_2 <- env1_united %>% filter(CHR<3)
 
 axisdf_1 <- env1_united_chr1_2 %>% group_by(CHR) %>% summarize(center=( max(BP) + min(BP) ) / 2 )

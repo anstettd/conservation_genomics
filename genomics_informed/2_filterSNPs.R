@@ -12,7 +12,9 @@
 library(tidyverse)
 
 
-#Import snp env associations
+#Import each environment-SNP association (BayPass BayesFactor output data)
+#Use files provided through external link: https://www.dropbox.com/sh/l6zm0av77fxsndg/AABYluDaUZE_OY1U32FqSgwUa?dl=0
+#Set up in a directory and change "/Users/daniel_anstett/Dropbox/AM_Workshop/trim/" to match your directory
 env1 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_1_trim.tsv",header=F, sep=" ")
 env2 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_2_trim.tsv",header=F, sep=" ")
 env3 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_3_trim.tsv",header=F, sep=" ")
@@ -45,7 +47,7 @@ env7_filter <- env7 %>% filter(BF >= 10)
 env8_filter <- env8 %>% filter(BF >= 10)
 env9_filter <- env9 %>% filter(BF >= 10)
 
-#Make Chromosome SNP variable for easier left_joining later
+#Make Chromosome and SNP IDs into new varaible and attach to the dataframe for each environment-SNP association 
 env1_united <- env1_filter %>% unite(chr_snp,Chromosome,SNP)
 env1_united <- env1_united %>% select(chr_snp)
 env1_filter_united <- cbind(env1_united,env1_filter)
@@ -84,14 +86,14 @@ env9_filter_united <- cbind(env9_united,env9_filter)
 
 
 #Export "adaptive" snps
-write_csv(env1_filter_united, "Genomics_scripts/Data/env1_adapt.csv",col_names=TRUE)
-write_csv(env2_filter_united, "Genomics_scripts/Data/env2_adapt.csv",col_names=TRUE)
-write_csv(env3_filter_united, "Genomics_scripts/Data/env3_adapt.csv",col_names=TRUE)
-write_csv(env4_filter_united, "Genomics_scripts/Data/env4_adapt.csv",col_names=TRUE)
-write_csv(env5_filter_united, "Genomics_scripts/Data/env5_adapt.csv",col_names=TRUE)
-write_csv(env6_filter_united, "Genomics_scripts/Data/env6_adapt.csv",col_names=TRUE)
-write_csv(env7_filter_united, "Genomics_scripts/Data/env7_adapt.csv",col_names=TRUE)
-write_csv(env8_filter_united, "Genomics_scripts/Data/env8_adapt.csv",col_names=TRUE)
-write_csv(env9_filter_united, "Genomics_scripts/Data/env9_adapt.csv",col_names=TRUE)
+write_csv(env1_filter_united, "Data/env1_adapt.csv",col_names=TRUE)
+write_csv(env2_filter_united, "Data/env2_adapt.csv",col_names=TRUE)
+write_csv(env3_filter_united, "Data/env3_adapt.csv",col_names=TRUE)
+write_csv(env4_filter_united, "Data/env4_adapt.csv",col_names=TRUE)
+write_csv(env5_filter_united, "Data/env5_adapt.csv",col_names=TRUE)
+write_csv(env6_filter_united, "Data/env6_adapt.csv",col_names=TRUE)
+write_csv(env7_filter_united, "Data/env7_adapt.csv",col_names=TRUE)
+write_csv(env8_filter_united, "Data/env8_adapt.csv",col_names=TRUE)
+write_csv(env9_filter_united, "Data/env9_adapt.csv",col_names=TRUE)
 
 
