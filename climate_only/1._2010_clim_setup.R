@@ -23,11 +23,11 @@ library(raster) # for raster grids
 library(rgdal) # for transforming projections
 
 ## INPUTS
-## (just points files for now; rasters loaded below)
-clim <- read_csv("SDM/data_files/points_Normal_1961_1990MSY.csv")
+## points defining range of M. cardinalis for the sake of cropping climate layers
+# clim <- read_csv("SDM/data_files/points_Normal_1961_1990MSY.csv")
 
 # Ensure no missing values
-complete <- clim[complete.cases(clim), ] # should be same dim as clim if there are no missing values
+#complete <- clim[complete.cases(clim), ] # should be same dim as clim if there are no missing values
 
 ##############################################################################
 #Functions
@@ -43,7 +43,7 @@ clip <- function(raster, shape) {
 ### MANIPULATE RASTER FILES TO DECREASE SIZE TO RELEVANT AREA
 
 ## Read in TIF files all at once
-# !!! Set working directory to folder with downloaded ASCII files
+# !!! Set working directory to folder with ASCII files downloaded from https://www.dropbox.com/sh/thd90znbkbmdfio/AACJfYY_7QLBvvUikiEfZKjWa?dl=0
 setwd("~/Dropbox/AM_Workshop/Climate/Normal_1981_2010_bioclim/Selected")
 allfiles.list <- list.files(pattern = '.tif') # list of '.tif' files
 allfiles <- stack(allfiles.list) # import set of rasters
@@ -73,7 +73,7 @@ plot(allfiles[[2]]) #compare to unclipped layer
 ##############################################################################
 # Save individual rasters
 # !!! Be sure working directory is set back to project folder
-setwd("~/Dropbox/AM_Workshop/AM_Workshop")
+setwd("~/Dropbox/a Papers/final_githubs/conservation_genomics")
 
 writeRaster(allfiles.clip[[1]],"Donor_selection/data/1981_2010/CMD.grd",bylayer = TRUE,
             datatype = 'INT4S', bandorder = '.grd', overwrite = TRUE)
