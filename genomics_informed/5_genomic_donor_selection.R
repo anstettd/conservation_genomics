@@ -209,50 +209,9 @@ tmap_save(snp25, filename = "Graphs/snp25_freq_p_a.pdf",width=5, height=6)
 
 
 ###################################################################################
-
-
-# Population Map
-pop_map <- pop_var_snp2 %>% dplyr::select(Long,Lat) #select relevant data
-pop_map_sf <- st_as_sf(pop_map,coords=c("Long","Lat"), crs=EPSG4326)
-
-#Plot population Map
-tmap_mode("plot")
-#tmap_mode("view")
-pop_tmap <- tm_shape(calo)+
-  tm_borders()+
-  tm_shape(pop_map_sf)+
-  tm_bubbles(size = 0.18,alpha=0,border.col="black")+ 
-  #tm_dots(size=0.1,shape=1)+
-  tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.005)
-pop_tmap
-tmap_save(pop_tmap, filename = "Graphs/pop_tmap.pdf",width=5, height=6)
-
-
-#Plot population Map, orange fill not working
-
-pop_map_o <- pop_var_snp2 %>% dplyr::select(Long,Lat) #select relevant data
-pop_map_o[1:55,3] <- 1
-pop_map_sf_o <- st_as_sf(pop_map_o,coords=c("Long","Lat",V3), crs=EPSG4326)
-tmap_mode("plot")
-#tmap_mode("view")
-pop_tmap_orange <- tm_shape(calo)+
-  tm_borders()+
-  tm_shape(pop_map_sf_o)+
-  tm_bubbles(size = 0.18,alpha=0,col="#FF9933")+ 
-  #tm_dots(size=0.1,shape=1)+
-  tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.005)
-pop_tmap_orange
-tmap_save(pop_tmap_orange, filename = "Graphs/pop_tmap_orange.pdf",width=5, height=6)
-
-
-
-
-###################################################################################
 # Map Proportion of putatively adaptive SNPs Present
 
 #Set up sf objects for snp proportions
-
-#Annual
 #MAT
 MAT_points <- pop_var %>% dplyr::select(Long,Lat,MAT)
 MAT_sf <- st_as_sf(MAT_points,coords=c("Long","Lat"), crs=EPSG4326)
@@ -269,9 +228,10 @@ CMD_sf <- st_as_sf(CMD_points,coords=c("Long","Lat"), crs=EPSG4326)
 ggplot()+ geom_sf(data = CMD_sf)+ ggtitle("CMD points") #check data is set up properly
 
 #Make Maps 
+# Note: remove "#" from tmap_mode("view") to switch to the dynamic map viewer mode in R studio.
 #MAT
 tmap_mode("plot")
-tmap_mode("view")
+#tmap_mode("view")
 MAT_all <- tm_shape(calo)+
   tm_borders()+
   tm_shape(MAT_sf)+
@@ -312,11 +272,11 @@ tmap_save(CMD_all, filename = "Graphs/CMD_all.pdf",width=5, height=6)
 ##plot missing variation for P8 Deep Creek
 
 #Setup sf object for P8
-p8_only <- pop_var_raw %>% filter(Paper_ID==8) %>% dplyr::select(Long,Lat)
+p8_only <- pop_var_raw %>% filter(Paper_ID==8) %>% dplyr::select(Long,Lat) #(Paper_ID can be changed to selection population of choice
 p8_sf <- st_as_sf(p8_only,coords=c("Long","Lat"), crs=EPSG4326)
 
 ##Setup P8 MAT
-binary1_miss_p8 <- binary_1 %>% filter(P8==0) #select only snps not in P8
+binary1_miss_p8 <- binary_1 %>% filter(P8==0) #select only snps not in P8, can be changed to selection population of choice
 psp_1_p8 <- as.data.frame(colMeans(binary1_miss_p8[5:59],na.rm = TRUE))
 pop_var_p8 <- cbind(pop_var_raw,psp_1_p8)
 colnames(pop_var_p8)[6] <- "MAT" 
@@ -325,6 +285,8 @@ colnames(pop_var_p8)[6] <- "MAT"
 MAT_points_p8 <- pop_var_p8 %>% dplyr::select(Long,Lat,MAT)
 MAT_sf_p8 <- st_as_sf(MAT_points_p8,coords=c("Long","Lat"), crs=EPSG4326)
 
+#Make Maps 
+# Note: remove "#" from tmap_mode("view") to switch to the dynamic map viewer mode in R studio.
 #MAT
 tmap_mode("plot")
 #tmap_mode("view")
@@ -351,7 +313,7 @@ MAP_sf_p8 <- st_as_sf(MAP_points_p8,coords=c("Long","Lat"), crs=EPSG4326)
 
 #MAP
 tmap_mode("plot")
-tmap_mode("view")
+#tmap_mode("view")
 miss_p8_MAP <- tm_shape(calo)+
   tm_borders()+
   tm_shape(MAP_sf_p8)+
@@ -376,7 +338,7 @@ CMD_sf_p8 <- st_as_sf(CMD_points_p8,coords=c("Long","Lat"), crs=EPSG4326)
 
 #CMD
 tmap_mode("plot")
-tmap_mode("view")
+#tmap_mode("view")
 miss_p8_CMD <- tm_shape(calo)+
   tm_borders()+
   tm_shape(CMD_sf_p8)+
@@ -390,14 +352,14 @@ tmap_save(miss_p8_CMD, filename = "Graphs/miss_p8_CMD.pdf",width=5, height=6)
 
 
 ###################################################################################
-#Distance to punitively adaptive snp
+#Distance to punitively adaptive snp for target site
 
 ##MAT
 dist_p8_MAT <- data.frame() #Generate empty data frame
 
 #select shortest distance to snp punitively adaptive to MAT 
 for (i in 1:nrow(binary_1)){
-  geography_p8 <- geography_km[,8] #get distance from p8
+  geography_p8 <- geography_km[,8] #get distance from p8, can be changed to select population of choice
   b1_t <- as.data.frame(t(binary_1[i,5:59])) #get line i from binary matrix
   geo_b1 <- as.data.frame(cbind(geography_p8,b1_t)) #bind columns together
   colnames(geo_b1) <- c("geo","snp")  #rename
