@@ -4,6 +4,10 @@
 ## Filter for BayesFactor > 10
 ##
 ## Last Modified July 23, 2021
+
+### OVERALL WORKFLOW:
+## Assumes you have: environment-SNP association tables with BayesFactors (BF) generated through BayPass
+## Produces: files that only have SNPS with a BF >10
 ###################################################################################
 
 

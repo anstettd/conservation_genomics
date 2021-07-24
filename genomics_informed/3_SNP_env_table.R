@@ -4,6 +4,13 @@
 ## 
 ##
 ## Last Modified July 23, 2021
+
+### OVERALL WORKFLOW:
+## Assumes you have:
+# A file with SNPS with a BF >10
+# SNP Table and loci labels
+## Produces: 
+#SNP table (SNPs with BF >10) with all genotype abundance information
 ###################################################################################
 
 
@@ -23,7 +30,7 @@ loci<-read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/baseline_filter
 colnames(loci) <- c("Chromosome","SNP") # lable columns
 
 loci_united <- loci %>% unite(chr_snp,"Chromosome","SNP",sep="_")
-loci_snp <-cbind(loci_united,snp) #add snp lables to rows
+loci_snp <-cbind(loci_united,snp) #add SNP labels to rows
 
 #Import environment-SNP associations
 env1 <- read_csv("Data/env1_adapt.csv")

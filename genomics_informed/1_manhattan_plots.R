@@ -4,6 +4,10 @@
 ## 
 ##
 ## Last Modified July 23, 2021
+
+### OVERALL WORKFLOW:
+## Assumes you have: environment-SNP association tables with BayesFactors generated through BayPass
+## Produces Manhattan plots 
 ###################################################################################
 
 
@@ -18,7 +22,7 @@ chr_size[,3] <- cumsum(chr_size$size) #get cumulative chromosome position
 colnames(chr_size)[3] <- "poz"
 
 
-#Import snp env associations
+#Import environment-SNP association tables
 #Use files provided through external link: https://www.dropbox.com/sh/l6zm0av77fxsndg/AABYluDaUZE_OY1U32FqSgwUa?dl=0
 #Set up in a directory and change "/Users/daniel_anstett/Dropbox/AM_Workshop/trim/" to match that directory
 env1 <- read.table("/Users/daniel_anstett/Dropbox/AM_Workshop/trim/ENV_1_trim.tsv",header=F, sep=" ")

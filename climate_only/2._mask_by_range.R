@@ -5,7 +5,7 @@
 # last update:  July 23 2021
 
 ## OVERALL WORKFLOW:
-# Assumes you have bioclim raster and shape file for the wanted range extent
+# Assumes you have climate rasters and a shape file for the wanted range extent
 # Produces new raster that is constrained by range extent shape file
 ##############################################################################
 

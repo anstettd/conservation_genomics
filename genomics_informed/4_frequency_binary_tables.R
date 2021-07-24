@@ -7,6 +7,14 @@
 ## Author Daniel Anstett & Julia Anstett
 ##
 ## Last Modified July 23, 2021
+
+### OVERALL WORKFLOW:
+## Assumes you have 
+# SNP tables with genotype abudance information for selected SNPS (BF > 10)
+# Present day 30 year average climate data per population
+## Produces:
+# Tables for the frequency and prescence/abscence of all loci association with climate change
+# Summarizes abudance information as a proportion for genotype associated with increased climate change 
 ###################################################################################
 
 

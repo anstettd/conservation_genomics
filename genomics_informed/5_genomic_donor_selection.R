@@ -5,6 +5,14 @@
 ##
 ##
 ## Last Modified July 23, 2021
+
+### OVERALL WORKFLOW:
+## Assumes you have:
+# Tables for the frequency and prescence/abscence of all loci association with climate change
+# Coordinates of all populations
+## Produces:
+# Maps and figures highlighting possible donor sites per SNP, for all SNPs and for SNPs missing from target site
+
 ###################################################################################
 
 
