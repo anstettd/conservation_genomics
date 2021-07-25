@@ -7,9 +7,9 @@ across 55 sites throughout California and Oregon, as well as present and future 
 
 
 genomics_informed outlies genomic-based strategies that involve analysis of the output of BayPass associations between climate data and genomic SNP data.
-If you are interested in just the final illustrated results please see: 1_manhattan_plots.R and 5_genomic_donor_selection.R
+If you are interested in just the most relevant illustrated results please see the R markdown file: Genomics_donor_selection.html_
 
-If you would like to follow all the computational steps from snp tables and BayPass output through to the final results see all five scirpts.
+If you would like to follow all the computational steps from snp tables and BayPass output through to all the final results see all five scirpts.
 "1_manhattan_plots.R"  Shows manhhatan plots for three climate variables, and can be modified to show upto 9 climate variables
 "2_filterSNPs.R"  Documents initital filtering of SNPs with a strong evidence of assocaition with climate (BayesFactor >10).
 "3_SNP_env_table.R"  Shows how the SNP table for selected SNPS (BF>10) is joined to the the SNP table that has abudance information for both biallelic genotypes
@@ -33,3 +33,5 @@ Known populations are overlaid to show which might be adapted to future cliamte 
 "Data" provides all the nessary data. Links are given for downloads of large files. 
 
 "Graphs" provides all the graphical outputs.
+
+"Genomics_donor_selection.Rmd" is the code underlying the genomics R markdown file.

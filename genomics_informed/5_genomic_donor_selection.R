@@ -244,7 +244,6 @@ MAT_all <- tm_shape(calo)+
   tm_borders()+
   tm_shape(MAT_sf)+
   tm_bubbles(size = 0.18,col="MAT")+ 
-  #tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.001)
 MAT_all
 tmap_save(MAT_all, filename = "Graphs/MAT_all.pdf",width=5, height=6)
@@ -256,7 +255,6 @@ MAP_all <- tm_shape(calo)+
   tm_borders()+
   tm_shape(MAP_sf)+
   tm_bubbles(size = 0.15,col="MAP")+ 
-  #tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.001)
 MAP_all
 tmap_save(MAP_all, filename = "Graphs/MAP_all.pdf",width=5, height=6)
@@ -268,7 +266,6 @@ CMD_all <- tm_shape(calo)+
   tm_borders()+
   tm_shape(CMD_sf)+
   tm_bubbles(size = 0.15,col="CMD")+ 
-  #tm_dots(size=0.1,shape=1)+
   tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.001)
 CMD_all
 tmap_save(CMD_all, filename = "Graphs/CMD_all.pdf",width=5, height=6)
