@@ -30,7 +30,7 @@ library(rgeos)
 library(geodist)
 library(RColorBrewer)
 library(VennDiagram)
-library(viridis)
+#library(viridis)
 
 ###################################################################################
 #Import population data to calculate distance between sites
