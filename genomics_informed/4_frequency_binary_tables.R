@@ -2,7 +2,7 @@
 ## Set up tables needed to carry out donor site selection
 ## Tabulate proportion of alleles associated with each environmental variable
 ## Generate frequency tables and binary tables containing population level proportion 
-## and binary snp info for allele associated with adptation to climate change
+## and binary snp info for alleles associated with adaptation to climate change
 
 ## Author Daniel Anstett & Julia Anstett
 ##
