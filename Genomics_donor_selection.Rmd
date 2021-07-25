@@ -1,0 +1,105 @@
+---
+title: "Genomic Donor Selection"
+author: "Daniel Anstett"
+date: "25/07/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Objective
+This markdown shows the R code that generates various plots that may inform selection of potential donor sites for assisted migration. This is meant to complement the Conservation Genomics Workshop run by Amy Angert and Daniel Anstett on July 29 & 30th 2021.
+
+## 1. Import libraries
+Import the following libraries that are required:
+
+```{r message=FALSE}
+library(tidyverse)
+library(cowplot)
+library(sf)
+library(tmap)
+library(rnaturalearth)
+library(rnaturalearthdata)
+#devtools::install_github("ropensci/rnaturalearthhires") # how to install rnaturalearthdata
+library(rnaturalearthhires)
+library(rgeos)
+library(geodist)
+library(RColorBrewer)
+#library(VennDiagram)
+#library(viridis)
+```
+
+## 2. Data Import
+Import the data and do some simple calculations and data setup:
+
+```{r}
+#Import population data to calculate distance between sites
+pop_var_raw <- read_csv("Data/paper_ID_site_select.csv")
+deg_distance <- pop_var_raw %>% dplyr::select(Long,Lat)
+geography <- geodist(deg_distance) 
+geography_km <- as.data.frame(geography/1000)
+
+#Import abundance results
+freq_1 <- read_csv("Data/freq_1.csv")
+freq_2 <- read_csv("Data/freq_2.csv")
+freq_3 <- read_csv("Data/freq_3.csv")
+freq_4 <- read_csv("Data/freq_4.csv")
+freq_5 <- read_csv("Data/freq_5.csv")
+freq_6 <- read_csv("Data/freq_6.csv")
+freq_7 <- read_csv("Data/freq_7.csv")
+freq_8 <- read_csv("Data/freq_8.csv")
+freq_9 <- read_csv("Data/freq_9.csv")
+
+#Import presence/abscence results
+binary_1 <- read_csv("Data/freq_binary_1.csv")
+binary_2 <- read_csv("Data/freq_binary_2.csv")
+binary_3 <- read_csv("Data/freq_binary_3.csv")
+binary_4 <- read_csv("Data/freq_binary_4.csv")
+binary_5 <- read_csv("Data/freq_binary_5.csv")
+binary_6 <- read_csv("Data/freq_binary_6.csv")
+binary_7 <- read_csv("Data/freq_binary_7.csv")
+binary_8 <- read_csv("Data/freq_binary_8.csv")
+binary_9 <- read_csv("Data/freq_binary_9.csv")
+
+# Get Proportion of SNPs Present
+psp_1 <- as.data.frame(colMeans(binary_1[5:59],na.rm = TRUE))
+psp_2 <- as.data.frame(colMeans(binary_2[5:59],na.rm = TRUE))
+psp_3 <- as.data.frame(colMeans(binary_3[5:59],na.rm = TRUE))
+psp_4 <- as.data.frame(colMeans(binary_4[5:59],na.rm = TRUE))
+psp_5 <- as.data.frame(colMeans(binary_5[5:59],na.rm = TRUE))
+psp_6 <- as.data.frame(colMeans(binary_6[5:59],na.rm = TRUE))
+psp_7 <- as.data.frame(colMeans(binary_7[5:59],na.rm = TRUE))
+psp_8 <- as.data.frame(colMeans(binary_8[5:59],na.rm = TRUE))
+psp_9 <- as.data.frame(colMeans(binary_9[5:59],na.rm = TRUE))
+
+#Put proportion of SNPs Present into population dataframe
+pop_var <- cbind(pop_var_raw,psp_1,psp_2,psp_3,psp_4,psp_5,psp_6,psp_7,psp_8,psp_9)
+colnames(pop_var)[6:14] <- c("MAT","MAP","PAS","EXT","CMD","Tave_wt","Tave_sm","PPT_wt","PPT_sm") 
+```
+
+
+
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
