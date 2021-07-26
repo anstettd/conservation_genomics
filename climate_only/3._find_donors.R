@@ -213,7 +213,7 @@ clim_MAP_245 <- tm_shape(MAP.S17.ssp245, bbox=st_bbox(calo)) + #legal boundires
   tm_dots(size=0.2,shape=1)+
   tm_shape(p8_sf)+
   tm_dots(size=0.3,shape=20,col= "#33FFFF")+
-  tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.001)
+  tm_layout(legend.position = c(0.1, 0.1),legend.title.size = 0.001)
 clim_MAP_245
 tmap_save(clim_MAP_245, filename = "Graphs/clim_MAP_245.pdf",width=5, height=6)
 
@@ -228,7 +228,7 @@ clim_MAP_585 <- tm_shape(MAP.S17.ssp585, bbox=st_bbox(calo)) + #legal boundires
   tm_dots(size=0.2,shape=1)+
   tm_shape(p8_sf)+
   tm_dots(size=0.3,shape=20,col= "#33FFFF")+
-  tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.001)
+  tm_layout(legend.position = c(0.2, 0.2),legend.title.size = 0.001)
 clim_MAP_585
 tmap_save(clim_MAP_585, filename = "Graphs/clim_MAP_585.pdf",width=5, height=6)
 
@@ -245,7 +245,7 @@ clim_CMD_pop <- tm_shape(CMD.clip, bbox=st_bbox(calo)) + #legal boundires
   tm_borders()+
   tm_shape(gen_pop_sf)+
   tm_dots(size=0.2,shape=1)+
-  tm_layout(legend.show = T)
+  tm_layout(legend.position = c(0.15, 0.1,legend.title.size = 0.001))+
 clim_CMD_pop
 tmap_save(clim_CMD_pop, filename = "Graphs/clim_CMD_pop.pdf",width=5, height=6)
 

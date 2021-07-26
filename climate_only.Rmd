@@ -1,5 +1,5 @@
 ---
-title: "climate_only"
+title: "Climate Only Donor Selection"
 author: "Daniel Anstett"
 date: "26/07/2021"
 output: html_document
@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Objective
-This markdown shows the R code for donor site selection for assited migration using only climate information (no genomics). We use present day 1981 to 2010 cliamte layers and well as SS245 climate change senario projections for 2040 to 2070, across:
+This markdown shows the R code for donor site selection for assisted migration using only climate information (no genomics). We use present day 1981 to 2010 climate layers as well as SS245 climate change scenario projections for 2040 to 2070, across:
 MAT = Mean annual temperature (°C)  
 MAP = Mean annual precipitation (mm)  
 CMD = Hargreaves climatic moisture deficit
@@ -39,7 +39,7 @@ library(RColorBrewer)
 
 
 ## 2. Data Import
-Import future climate change data. Important population data and generate sf objects for all populations and the focal population, Deep Creek.
+Import future climate change data. Import population data and generate sf objects for all populations and the focal population, Deep Creek.
 
 ```{r message=FALSE}
 #Future Climate Data per Restoration Site
@@ -53,8 +53,6 @@ pop_var_raw <- read_csv("Data/paper_ID_site_select.csv")
 gen_pop <- pop_var_raw %>% dplyr::select(Long,Lat)
 EPSG4326<-"+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" #setup WGS 1984 CRS
 gen_pop_sf <- st_as_sf(gen_pop,coords=c("Long","Lat"), crs=EPSG4326)
-#check data is set up properly
-ggplot()+ geom_sf(data = gen_pop_sf)+ ggtitle("Focal Populations")
 
 #Setup sf object for P8
 p8_only <- pop_var_raw %>% filter(Paper_ID==8) %>% dplyr::select(Long,Lat)
@@ -75,59 +73,160 @@ calo <- states %>%
 ```
 
 
+## 4. Import climate rasters and plot the rasters
 
-##4. Import climate rasters
+Rasters were imported from climate NA and cut down to a size easier to handle on github. See the our github conservation_genomics for detailed scripts. Here we bring in the smaller raster files:
 
 ```{r message=FALSE}
 MAT.clip <- raster("Data/MAT.clip.grd")
 MAP.clip <- raster("Data/MAP.clip.grd")
+CMD.clip <- raster("Data/CMD.clip.grd")
 ```
 
 
+Here we plot each climate raster using color gradients that are intuitive for the climate variable. We use gradients from the R package RColorBrewer. We also include the location of the 55 focal populations of _M. cardinalis_ in open circles.
 
 ```{r message=FALSE}
+# Plot MAT climate layer with populations and legend
+pall_temp<-rev(brewer.pal(n=6, "RdYlBu")) #setup color gradient
+tmap_mode("plot")
+clim_MAT_pop <- tm_shape(MAT.clip, bbox=st_bbox(calo)) + #legal boundires
+  tm_raster(palette=pall_temp)+
+  tm_shape(calo)+
+  tm_borders()+
+  tm_shape(gen_pop_sf)+
+  tm_dots(size=0.2,shape=1)+
+  tm_layout(legend.position = c(0, 0),legend.title.size = 0.001)
+clim_MAT_pop
+
+# Plot MAP climate layer with populations and legend
+pall_ppt<-brewer.pal(n=5, "YlGnBu") #setup color gradient
+tmap_mode("plot")
+clim_MAP_pop <- tm_shape(MAP.clip, bbox=st_bbox(calo)) + #legal boundires
+  tm_raster(palette=pall_ppt)+
+  tm_shape(calo)+
+  tm_borders()+
+  tm_shape(gen_pop_sf)+
+  tm_dots(size=0.2,shape=1)+
+  tm_layout(legend.position = c(0, 0),legend.title.size = 0.001)
+clim_MAP_pop
+
+# Plot CMD climate layer with populations and legend
+tmap_mode("plot")
+clim_CMD_pop <- tm_shape(CMD.clip, bbox=st_bbox(calo)) + #legal boundires
+  tm_raster()+
+  tm_shape(calo)+
+  tm_borders()+
+  tm_shape(gen_pop_sf)+
+  tm_dots(size=0.2,shape=1)+
+  tm_layout(legend.position = c(0, 0),legend.title.size = 0.001)
+clim_CMD_pop
 ```
 
+Notice how southern areas of the range are warmer and drier, while central and northern areas become cooler and wetter.
 
+## 5. Use Mean Annual Temperature to inform assited migration
+
+Now that we have everything loaded we will use these climate layers to find conditions on today's climate that match future climate change conditions at a target site of conservation concern. We will use Site 8, Deep Creek as our target site. First we constrain the climate layer to only display mean annual temperature values within +- 1 °C of the 2040 to 2070 climate change projection for Deep Creek (based on the CMIP6 moderate climate change scenario, SS245). 
 
 ```{r message=FALSE}
+#setup for ssp245 climate change projection for MAT
+MAT.S17.ssp245<-MAT.clip #setup object
+#Constrain by climate layer by 2040-2070 cliamte change projection +- 1 degree
+MAT.S17.ssp245[MAT.clip<gcc.clim$MAT[8]-1] <-NA 
+MAT.S17.ssp245[MAT.clip>gcc.clim$MAT[8]+1] <-NA
+
 ```
 
-
+Now we map only regions matching ssp245 MAT climate change projections for Deep Creek.The 55 focal _M. cardinalis_ populations are shown as open circles and Deep Creek is shown as a teal circle. The constrained MAT layer is given in pink.
 
 ```{r message=FALSE}
+tmap_mode("plot")
+clim_MAT_245 <- tm_shape(MAT.S17.ssp245, bbox=st_bbox(calo)) + #legal boundires
+  tm_raster(palette = "#FF00FF",legend.show = FALSE)+
+  tm_shape(calo)+
+  tm_borders()+
+  tm_shape(gen_pop_sf)+
+  tm_dots(size=0.2,shape=1)+
+  tm_shape(p8_sf)+
+  tm_dots(size=0.35,shape=20,col= "#33FFFF")+
+  tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.001)
+clim_MAT_245
 ```
 
+Populations overlap with the constrained MAT layer in many locations. This suggests temperature values that may be experienced in the future in Deep Creek are currently experienced in many parts of the range of M. cardinalis. This makes it rather easy to identify locations that may provide suitable genetic material. For example two locations within 100 km of the site are viable donor sites according to this method. Many other locations across the range also fall within the needed temperature range, giving flexibility in where sampling of donor sites may occur.
 
+
+## 5. Use Mean Annual Precipitation to inform assited migration
+
+We can apply this same approach now to mean annual precipitation. Again we constrain the climate layer, but this time by future MAP values of Deep Creek within +- 100 mm. 
 
 ```{r message=FALSE}
+#setup for ssp245 climate change projection for MAP
+MAP.S17.ssp245<-MAP.clip #setup object
+#Constrain by climate layer by 2040-2070 cliamte change projection +- 100 mm
+MAP.S17.ssp245[MAP.clip<gcc.clim$MAP[8]-100] <-NA
+MAP.S17.ssp245[MAP.clip>gcc.clim$MAP[8]+100] <-NA
 ```
 
+We again map only regions matching ssp245 MAT climate change projections for Deep Creek, plus the population localities. 
 
 ```{r message=FALSE}
+tmap_mode("plot")
+clim_MAP_245 <- tm_shape(MAP.S17.ssp245, bbox=st_bbox(calo)) + #legal boundires
+  tm_raster(palette = "#FF00FF",legend.show = FALSE)+
+  tm_shape(calo)+
+  tm_borders()+
+  tm_shape(gen_pop_sf)+
+  tm_dots(size=0.2,shape=1)+
+  tm_shape(p8_sf)+
+  tm_dots(size=0.3,shape=20,col= "#33FFFF")+
+  tm_layout(legend.position = c(0.1, 0.1),legend.title.size = 0.001)
+clim_MAP_245
 ```
 
+This time there are no northern populations that experience the future climate change condition. The only populations that match the climate change condition is one central population and some southern populations. According to these analyses assisted migration would have to be carried out from distant populations. This type of pattern could present challenges in other species if there is a constraint on how far populations can be sourced, such as regulations or genetic incompatibility.
 
 
+## 6. Use Climate Moisture Deficit to inform assited migration
 
+Finally we can apply the same approach to Climate Moisture Deficit, a metric which takes into account both temperature and precipitation information. We constrain the climate layer, but this time by future CMD values of Deep Creek within +- 100 units.
 
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r message=FALSE}
+#setup for ssp245 climate change projection for CMD
+CMD.S17.ssp245<-CMD.clip
+#Constrain by climate layer by 2040-2070 climate change projection +- 100 units
+CMD.S17.ssp245[CMD.clip<gcc.clim$CMD[8]-100] <-NA
+CMD.S17.ssp245[CMD.clip>gcc.clim$CMD[8]+100] <-NA
 ```
 
-## Including Plots
+We map only regions matching ssp245 CMD climate change projections for Deep Creek, plus the population localities. 
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r message=FALSE}
+tmap_mode("plot")
+clim_CMD_245 <- tm_shape(CMD.S17.ssp245, bbox=st_bbox(calo)) + #legal boundires
+  tm_raster(palette = "#FF00FF",legend.show = FALSE)+
+  tm_shape(calo)+
+  tm_borders()+
+  tm_shape(gen_pop_sf)+
+  tm_dots(size=0.2,shape=1)+
+  tm_shape(p8_sf)+
+  tm_dots(size=0.3,shape=20,col= "#33FFFF")+
+  tm_layout(legend.position = c(0.29, 0.73),legend.title.size = 0.001)
+clim_CMD_245
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Again there are no populations close to Deep Creek that experience the future climate change condition. Only one central and some southern populations have the appropriate present-day conditions requiring long-distance translocations. Without further genomic information, it will be difficult to know for sure if more northern populations indeed do not have adaptive genetic variation. 
+
+If it is not possible to sample from populations as far way, one option using this method would be to relax the climatic constraints to allow a broader range of conditions in the selected layer. For example, one could produce a layer within +- 200 CMD units instead of 100. This should largely be informed by the biology of the system.
+
+
+## 7. Conclusion
+
+Overall we provide a visualization tool for using climate and population information to search for possible donor sites and develop conservation strategies. This would function best in conjunction with genomic information to provide additional validation of adaptive potential of selected sites. However, given enough exploration of different filtering thresholds, this tool has wider potential usage across multiple species because it does not require the resources needed to carry out next generation sequencing and genomic data analysis. 
+
+In terms of the study system, this tools suggests that many locations on today's climate match projected climate change conditions for temperature, but not for drought related variables. This provides evidence that adaptation to drought may be a future concern for _M. cardinalis_.
+
+
+
+
