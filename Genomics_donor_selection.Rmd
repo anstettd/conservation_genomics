@@ -31,7 +31,6 @@ library(rgeos)
 library(geodist)
 library(RColorBrewer)
 library(VennDiagram)
-#library(viridis)
 ```
 
 
