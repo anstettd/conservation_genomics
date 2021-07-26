@@ -85,7 +85,7 @@ Visualize the number of SNPs associated with each environmental variable and the
 For the rest of this markdown please note:  
 MAT = Mean annual temperature (°C)  
 MAP = Mean annual precipitation (mm)  
-CMD = Hargreaves climatic moisture deficit (mm)  
+CMD = Hargreaves climatic moisture deficit  
 
 ```{r message=FALSE}
 MAT_set <- pull(binary_1[,1])

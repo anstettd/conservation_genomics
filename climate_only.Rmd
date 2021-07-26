@@ -1,0 +1,133 @@
+---
+title: "climate_only"
+author: "Daniel Anstett"
+date: "26/07/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Objective
+This markdown shows the R code for donor site selection for assited migration using only climate information (no genomics). We use present day 1981 to 2010 cliamte layers and well as SS245 climate change senario projections for 2040 to 2070, across:
+MAT = Mean annual temperature (°C)  
+MAP = Mean annual precipitation (mm)  
+CMD = Hargreaves climatic moisture deficit
+
+This data is from Climate NA (see climatena.ca and adaptwest.databasin.org/pages/adaptwest-climatena/). 
+
+We use the climatic data and consider the climate close to 55 populations of the plant scarlet monkeyflower, _Mimulus cardinalis_ spanning most of the range of this plant. This page is meant to complement the Conservation Genomics Workshop run by Amy Angert and Daniel Anstett on July 29 & 30th 2021. 
+
+## 1. Import libraries
+Import the following libraries that are required:
+
+```{r message=FALSE}
+library(tidyverse) 
+library(raster) 
+library(cowplot)
+library(sf)
+library(tmap)
+library(tidyverse)
+library(rnaturalearth)
+library(rnaturalearthdata)
+#devtools::install_github("ropensci/rnaturalearthhires") # how to install this package
+library(rnaturalearthhires)
+library(rgeos)
+library(RColorBrewer)
+```
+
+
+## 2. Data Import
+Import future climate change data. Important population data and generate sf objects for all populations and the focal population, Deep Creek.
+
+```{r message=FALSE}
+#Future Climate Data per Restoration Site
+gcc.year <- read_csv("Data/timeseries_lat_2 GCMsY_2041_2071.csv")
+
+#Selected wanted variables
+gcc.clim <- gcc.year %>% dplyr::select(GCM:Elevation,MAT,MAP,CMD)
+
+#Set up focal 55 populations into sf object
+pop_var_raw <- read_csv("Data/paper_ID_site_select.csv")
+gen_pop <- pop_var_raw %>% dplyr::select(Long,Lat)
+EPSG4326<-"+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" #setup WGS 1984 CRS
+gen_pop_sf <- st_as_sf(gen_pop,coords=c("Long","Lat"), crs=EPSG4326)
+#check data is set up properly
+ggplot()+ geom_sf(data = gen_pop_sf)+ ggtitle("Focal Populations")
+
+#Setup sf object for P8
+p8_only <- pop_var_raw %>% filter(Paper_ID==8) %>% dplyr::select(Long,Lat)
+p8_sf <- st_as_sf(p8_only,coords=c("Long","Lat"), crs=EPSG4326)
+
+```
+
+
+## 3. Mapping Setup
+Set up state boundaries for maps used when making donor selection plots:
+
+```{r message=FALSE}
+# California & Oregon Map Setup
+states<-ne_states(country=c("canada","united states of america"),returnclass= "sf")
+calo <- states %>%
+  filter(name_en=="Oregon" | name_en=="California" | name_en=="Nevada")
+#st_crs(calo) in WGS 1984
+```
+
+
+
+##4. Import climate rasters
+
+```{r message=FALSE}
+MAT.clip <- raster("Data/MAT.clip.grd")
+MAP.clip <- raster("Data/MAP.clip.grd")
+```
+
+
+
+```{r message=FALSE}
+```
+
+
+
+```{r message=FALSE}
+```
+
+
+
+```{r message=FALSE}
+```
+
+
+
+```{r message=FALSE}
+```
+
+
+```{r message=FALSE}
+```
+
+
+
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
