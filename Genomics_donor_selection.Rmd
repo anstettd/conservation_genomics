@@ -94,7 +94,7 @@ MAP_set <- pull(binary_2[,1])
 CMD_set <- pull(binary_5[,1])
 
 ven_3 <- list(MAT_set,MAP_set,CMD_set)
-
+futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger")
 VD_1<-venn.diagram(x=ven_3,
              category.names = c("MAT" , "MAP" , "CMD"),
              fill = c("yellow", "cyan","magenta"),
@@ -106,6 +106,7 @@ VD_1<-venn.diagram(x=ven_3,
 )
 grid.newpage()
 grid.draw(VD_1)
+
 ```
 
 
